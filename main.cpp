@@ -301,7 +301,7 @@ static void resize(int w, int h)
   
   /* 透視変換行列の初期化 */
   glLoadIdentity();
-  gluPerspective(40.0, (double)w / (double)h, 1.0, 100.0);
+  gluPerspective(40.0, (double)w / (double)h, 0.1, 10.0);
 }
 
 static void idle(void)
