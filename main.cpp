@@ -12,6 +12,12 @@ PFNGLACTIVETEXTUREPROC glActiveTexture;
 #  include <GL/glut.h>
 #endif
 
+/* トラックボール処理用関数の宣言 */
+#include "trackball.h"
+
+/* 箱を描く関数の宣言 */
+#include "box.h"
+
 /*
 ** 光源
 */
@@ -197,12 +203,6 @@ static void init(void)
   glLightfv(GL_LIGHT0, GL_SPECULAR, lightcol);
   glLightfv(GL_LIGHT0, GL_AMBIENT, lightamb);
 }
-
-/* トラックボール処理用関数の宣言 */
-#include "trackball.h"
-
-/* 箱を描く関数の宣言 */
-#include "box.h"
 
 /*
 ** シーンの描画
