@@ -209,7 +209,7 @@ static void init(void)
 */
 static void scene(void)
 {
-  static const GLfloat color[] = { 1.0, 1.0, 1.0, 1.0 };  /* 材質 (色) */
+  static const GLfloat color[] = { 1.0f, 1.0f, 1.0f, 1.0f };  /* 材質 (色) */
   
   /* 材質の設定 */
   glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color);
