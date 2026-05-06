@@ -1,7 +1,7 @@
 ﻿#include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#if defined(WIN32)
+#if defined(_WIN32)
 //#  pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"")
 #  include "glut.h"
 #  include "glext.h"
@@ -81,7 +81,7 @@ static void init(void)
   /* テクスチャ環境 */
   glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
   
-#if defined(WIN32)
+#if defined(_WIN32)
   glActiveTexture =
     (PFNGLACTIVETEXTUREPROC)wglGetProcAddress("glActiveTexture");
 #endif
