@@ -77,7 +77,7 @@ static void qrot(double r[], double q[])
 ** トラックボール処理の初期化
 ** 　　プログラムの初期化処理のところで実行する
 */
-void trackballInit(void)
+void trackballInit()
 {
   /* ドラッグ中ではない */
   drag = 0;
@@ -170,7 +170,7 @@ void trackballStop(int x, int y)
 ** 回転の変換行列を戻す
 ** 　　戻り値を glMultMatrixd() などで使用してオブジェクトを回転する
 */
-double *trackballRotation(void)
+double *trackballRotation()
 {
   return rt;
 }
