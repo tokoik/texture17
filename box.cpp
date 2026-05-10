@@ -1,6 +1,5 @@
-﻿#if defined(WIN32)
-#  include "glut.h"
-#elif defined(__APPLE__) || defined(MACOSX)
+﻿#if defined(__APPLE__) || defined(MACOSX)
+#  define GL_SILENCE_DEPRECATION
 #  include <GLUT/glut.h>
 #else
 #  include <GL/glut.h>
@@ -15,14 +14,14 @@ void box(double x, double y, double z)
 {
   /* 頂点の座標値 */
   const GLdouble vertex[][4][3] = {
-    { { -x, -y, -z }, {  x, -y, -z }, {  x, -y,  z }, { -x, -y,  z } }, /* 下 */
-    { {  x, -y, -z }, { -x, -y, -z }, { -x,  y, -z }, {  x,  y, -z } }, /* 裏 */
-    { {  x, -y,  z }, {  x, -y, -z }, {  x,  y, -z }, {  x,  y,  z } }, /* 右 */
-    { { -x, -y,  z }, {  x, -y,  z }, {  x,  y,  z }, { -x,  y,  z } }, /* 前 */
-    { { -x, -y, -z }, { -x, -y,  z }, { -x,  y,  z }, { -x,  y, -z } }, /* 左 */
-    { { -x,  y,  z }, {  x,  y,  z }, {  x,  y, -z }, { -x,  y, -z } }, /* 上 */
+    { { -x, -y, -z }, {  x, -y, -z }, {  x, -y,  z }, { -x, -y,  z } },
+    { {  x, -y, -z }, { -x, -y, -z }, { -x,  y, -z }, {  x,  y, -z } },
+    { {  x, -y,  z }, {  x, -y, -z }, {  x,  y, -z }, {  x,  y,  z } },
+    { { -x, -y,  z }, {  x, -y,  z }, {  x,  y,  z }, { -x,  y,  z } },
+    { { -x, -y, -z }, { -x, -y,  z }, { -x,  y,  z }, { -x,  y, -z } },
+    { { -x,  y,  z }, {  x,  y,  z }, {  x,  y, -z }, { -x,  y, -z } },
   };
-  
+
   /* 頂点のテクスチャ座標 */
   static const GLdouble texcoord[][4][2] = {
     { { 0.0, 1.0 }, { 1.0, 1.0 }, { 1.0, 0.0 }, { 0.0, 0.0 } },
@@ -32,7 +31,7 @@ void box(double x, double y, double z)
     { { 0.0, 1.0 }, { 1.0, 1.0 }, { 1.0, 0.0 }, { 0.0, 0.0 } },
     { { 0.0, 1.0 }, { 1.0, 1.0 }, { 1.0, 0.0 }, { 0.0, 0.0 } },
   };
-  
+
   /* 面の法線ベクトル */
   static const GLdouble normal[][3] = {
     {  0.0, -1.0,  0.0 },
@@ -42,9 +41,9 @@ void box(double x, double y, double z)
     { -1.0,  0.0,  0.0 },
     {  0.0,  1.0,  0.0 },
   };
-  
+
   int i, j;
-  
+
   /* 四角形６枚で箱を描く */
   glBegin(GL_QUADS);
   for (j = 0; j < 6; ++j) {

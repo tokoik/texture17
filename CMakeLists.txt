@@ -18,6 +18,7 @@ set(HEADERS
 
 # テクスチャファイルなど
 set(TEXTURE_FILES
+    "dot.raw"
     "room2nx.raw"
     "room2ny.raw"
     "room2nz.raw"
@@ -128,6 +129,7 @@ else()
     # freeglut (glut) と gl の設定を取得
     pkg_search_module(GLUT REQUIRED glut freeglut)
     pkg_search_module(GL REQUIRED gl)
+    pkg_search_module(GLU REQUIRED glu)
 
     if(GLUT_FOUND)
         target_compile_options(${PROJECT_NAME} PRIVATE ${GLUT_CFLAGS})
@@ -139,6 +141,12 @@ else()
         target_compile_options(${PROJECT_NAME} PRIVATE ${GL_CFLAGS})
         target_link_options(${PROJECT_NAME} PRIVATE ${GL_LDFLAGS})
         target_link_libraries(${PROJECT_NAME} PRIVATE ${GL_LIBRARIES})
+    endif()
+
+    if(GLU_FOUND)
+        target_compile_options(${PROJECT_NAME} PRIVATE ${GLU_CFLAGS})
+        target_link_options(${PROJECT_NAME} PRIVATE ${GLU_LDFLAGS})
+        target_link_libraries(${PROJECT_NAME} PRIVATE ${GLU_LIBRARIES})
     endif()
 
     # 標準数学ライブラリ
