@@ -108,14 +108,14 @@ cd build
 このプログラムでは3つのテクスチャユニット（0番、1番、2番）を使用します。
 
 1. **ベースのテクスチャ (テクスチャユニット0):**
-   `glActiveTexture(GL_TEXTURE0)` を呼び出してユニット0を指定し、`dot.raw` (256×256) の画像を 2D テクスチャとして割り当てます。テクスチャ環境は `GL_MODULATE` に設定します。
+   `glActiveTexture(` `GL_TEXTURE0` `)` を呼び出してユニット0を指定し、`dot.raw` (256×256) の画像を 2D テクスチャとして割り当てます。テクスチャ環境は `GL_MODULATE` に設定します。
 
 2. **フレネル関数のテーブル (テクスチャユニット1):**
-   `glActiveTexture(GL_TEXTURE1)` を呼び出してユニット1に切り替え、先ほど作成した1次元テクスチャを割り当てます。テクスチャの両端の値が境界色とブレンドされないように繰り返し方法に `GL_CLAMP_TO_EDGE` を指定し、テクスチャ環境には `GL_MODULATE` を設定します。
+   `glActiveTexture(` `GL_TEXTURE1` `)` を呼び出してユニット1に切り替え、先ほど作成した1次元テクスチャを割り当てます。テクスチャの両端の値が境界色とブレンドされないように繰り返し方法に `GL_CLAMP_TO_EDGE` を指定し、テクスチャ環境には `GL_MODULATE` を設定します。
    このテクスチャのサンプリングには法線ベクトルの Z 成分を用いるため、`glTexGeni()` で `GL_NORMAL_MAP` を指定して `GL_R` 座標を自動生成します。さらに、テクスチャ行列を用いて、生成された `R` 座標を1次元テクスチャの `S` 座標として使用できるように交換（変換）しています。
 
 3. **キューブマップ (テクスチャユニット2):**
-   `glActiveTexture(GL_TEXTURE2)` を呼び出してユニット2に切り替え、環境マッピング用のキューブマップ (`GL_TEXTURE_CUBE_MAP`) を割り当てます。
+   `glActiveTexture(` `GL_TEXTURE2` `)` を呼び出してユニット2に切り替え、環境マッピング用のキューブマップ (`GL_TEXTURE_CUBE_MAP`) を割り当てます。
    このユニットに対して、テクスチャ環境を **`GL_COMBINE`** に設定し、`GL_COMBINE_RGB` を **`GL_INTERPOLATE`** (線形補間) に設定します。
    補間の係数となる第3の入力として、以下のように指定します。
    - `GL_SOURCE2_RGB` に `GL_PREVIOUS` (直前のテクスチャユニットからの出力)
@@ -130,12 +130,12 @@ cd build
 図形を描画する際には、それぞれのテクスチャユニットに対して個別に機能を有効化（`glEnable()`）する必要があります。
 
 1. **各テクスチャユニットの有効化:**
-   まず `glActiveTexture(GL_TEXTURE0)` を呼び出して `GL_TEXTURE_2D` を有効にします。
-   次に `glActiveTexture(GL_TEXTURE1)` を呼び出して `GL_TEXTURE_1D` を有効にします。
-   最後に `glActiveTexture(GL_TEXTURE2)` を呼び出して `GL_TEXTURE_CUBE_MAP` とテクスチャ座標の自動生成 (`GL_TEXTURE_GEN_S`, `GL_TEXTURE_GEN_T`, `GL_TEXTURE_GEN_R`) を有効にします。
+   まず `glActiveTexture(` `GL_TEXTURE0` `)` を呼び出して `GL_TEXTURE_2D` を有効にします。
+   次に `glActiveTexture(` `GL_TEXTURE1` `)` を呼び出して `GL_TEXTURE_1D` を有効にします。
+   最後に `glActiveTexture(` `GL_TEXTURE2` `)` を呼び出して `GL_TEXTURE_CUBE_MAP` とテクスチャ座標の自動生成 (`GL_TEXTURE_GEN_S`, `GL_TEXTURE_GEN_T`, `GL_TEXTURE_GEN_R`) を有効にします。
 
 2. **オブジェクトの描画と合成:**
-   `box(1.0, 1.0, 1.0)` によって立方体を描画します。この際、3つのテクスチャユニットの設定に基づき、ベース画像に対して、フレネル反射率に応じた環境マップの映り込みが合成されて描画されます。
+   `box()` によって立方体を描画します。この際、3つのテクスチャユニットの設定に基づき、ベース画像に対して、フレネル反射率に応じた環境マップの映り込みが合成されて描画されます。
 
 3. **状態の復元:**
    描画が完了したら、他の描画に影響を与えないよう `glDisable()` を使って、各テクスチャ機能や自動生成を無効化し、アクティブなテクスチャユニットを0に戻します。
