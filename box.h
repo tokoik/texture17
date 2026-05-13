@@ -1,4 +1,5 @@
 ﻿#pragma once
+#define BOX_H
 
 /*
 ** 箱の描画
