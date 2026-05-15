@@ -130,14 +130,17 @@
 図形を描画する際には、それぞれのテクスチャユニットに対して個別に機能を有効化（`glEnable()`）する必要があります。
 
 1. **各テクスチャユニットの有効化**
+
    まず `glActiveTexture(` `GL_TEXTURE0` `)` を呼び出して `GL_TEXTURE_2D` を有効にします。
    次に `glActiveTexture(` `GL_TEXTURE1` `)` を呼び出して `GL_TEXTURE_1D` を有効にします。
    最後に `glActiveTexture(` `GL_TEXTURE2` `)` を呼び出して `GL_TEXTURE_CUBE_MAP` とテクスチャ座標の自動生成 (`GL_TEXTURE_GEN_S`, `GL_TEXTURE_GEN_T`, `GL_TEXTURE_GEN_R`) を有効にします。
 
 2. **オブジェクトの描画と合成**
+
    `box(` 1.0, 1.0, 1.0 `)` によって立方体を描画します。この際、3つのテクスチャユニットの設定に基づき、ベース画像に対して、フレネル反射率に応じた環境マップの映り込みが合成されて描画されます。
 
 3. **状態の復元**
+
    描画が完了したら、他の描画に影響を与えないよう `glDisable()` を使って、各テクスチャ機能や自動生成を無効化し、アクティブなテクスチャユニットを0に戻します。
 
 ![フレネル反射](https://tokoik.github.io/blog/assets/images/texture17.webp)
