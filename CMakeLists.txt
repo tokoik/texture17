@@ -28,20 +28,22 @@ set(TEXTURE_FILES
 )
 
 if(APPLE)
+
     # macOS の設定
     set(ICON_FILE "opengl.icns")
 
-    # アプリケーションバンドルとして実行ファイルを作成
+    # アプリケーションバンドルとして実行ファイルを作成する
     add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${SOURCES} ${HEADERS} ${TEXTURE_FILES} ${ICON_FILE})
 
-    # GLUT と OpenGL の Framework を検索・リンク
+    # GLUT と OpenGL の Framework を検索してリンクする
     find_library(GLUT_LIBRARY GLUT)
     find_library(OPENGL_LIBRARY OpenGL)
     target_link_libraries(${PROJECT_NAME} PRIVATE ${GLUT_LIBRARY} ${OPENGL_LIBRARY})
 
     # アプリケーションバンドルの作成設定
     set_target_properties(${PROJECT_NAME} PROPERTIES
-        # アプリケーションバンドルとしてビルド
+
+        # アプリケーションバンドルとしてビルドする
         MACOSX_BUNDLE TRUE
 
         # Info.plist に書き込む内容
@@ -52,7 +54,7 @@ if(APPLE)
         MACOSX_BUNDLE_ICON_FILE "${ICON_FILE}"
         MACOSX_BUNDLE_COPYRIGHT "Copyright © 2026 Kohe Tokoi. All rights reserved."
 
-        # Xcode のスキーム生成
+        # Xcode のスキームを生成する
         XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER "com.yourcompany.${PROJECT_NAME}"
         XCODE_GENERATE_SCHEME ON
     )
@@ -68,15 +70,14 @@ if(APPLE)
     set_property(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}" PROPERTY XCODE_GENERATE_SCHEME ON)
 
 elseif(WIN32)
+
     # Windows (Visual Studio) の設定
     add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 
+    # glext.h と khrplatform.h をダウンロードする
     include(FetchContent)
-
-    # glext.h と khrplatform.h のダウンロード設定
     set(GLEXT_H "${CMAKE_BINARY_DIR}/include/GL/glext.h")
     set(KHRPLATFORM_H "${CMAKE_BINARY_DIR}/include/KHR/khrplatform.h")
-
     if(NOT EXISTS "${GLEXT_H}")
         file(DOWNLOAD "https://www.khronos.org/registry/OpenGL/api/GL/glext.h" "${GLEXT_H}")
     endif()
@@ -84,24 +85,28 @@ elseif(WIN32)
         file(DOWNLOAD "https://www.khronos.org/registry/EGL/api/KHR/khrplatform.h" "${KHRPLATFORM_H}")
     endif()
 
+    # glext.h と khrplatform.h をインクルードパスに追加する
     target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_BINARY_DIR}/include")
 
-    # freeglut のソースを取得してビルド
+    # freeglut のソースを取得してビルドする
     FetchContent_Declare(
         freeglut
         GIT_REPOSITORY https://github.com/FreeGLUTProject/freeglut.git
         GIT_TAG master
     )
-    # freeglut の不要な共有ライブラリやデモのビルドを無効化
+
+    # freeglut の不要な共有ライブラリやデモをビルドしない
     set(FREEGLUT_BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
     set(FREEGLUT_BUILD_DEMOS OFF CACHE BOOL "" FORCE)
     FetchContent_MakeAvailable(freeglut)
 
-    # OpenGLのリンク
+    # OpenGL をリンクする
     find_package(OpenGL REQUIRED)
 
+    # freeglut のヘッダファイルのパスを通す
     target_include_directories(${PROJECT_NAME} PRIVATE "${freeglut_SOURCE_DIR}/include")
-    # STATICリンクを利用
+
+    # freeglut は STATIC リンクする
     target_link_libraries(${PROJECT_NAME} PRIVATE freeglut_static OpenGL::GL)
     target_compile_definitions(${PROJECT_NAME} PRIVATE FREEGLUT_STATIC)
 
@@ -113,44 +118,29 @@ elseif(WIN32)
             "$<TARGET_FILE_DIR:${PROJECT_NAME}>")
     endforeach()
 
-    # Visual Studio のスタートアッププロジェクトとして設定
+    # このプロジェクトを Visual Studio のスタートアッププロジェクトとして設定する
     set_property(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}" PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})
 
     # Visual Studio で実行する際の作業ディレクトリを実行ファイルと同階層にする
     set_target_properties(${PROJECT_NAME} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "$<TARGET_FILE_DIR:${PROJECT_NAME}>")
 
 else()
+
     # Ubuntu Linux (その他UNIX系) の設定
     add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 
-    # pkg-config を利用
-    find_package(PkgConfig REQUIRED)
+    # OpenGL と GLUT を探す
+    find_package(OpenGL REQUIRED)
+    find_package(GLUT REQUIRED)
 
-    # freeglut (glut) と gl の設定を取得
-    pkg_search_module(GLUT REQUIRED glut freeglut)
-    pkg_search_module(GL REQUIRED gl)
-    pkg_search_module(GLU REQUIRED glu)
-
-    if(GLUT_FOUND)
-        target_compile_options(${PROJECT_NAME} PRIVATE ${GLUT_CFLAGS})
-        target_link_options(${PROJECT_NAME} PRIVATE ${GLUT_LDFLAGS})
-        target_link_libraries(${PROJECT_NAME} PRIVATE ${GLUT_LIBRARIES})
-    endif()
-
-    if(GL_FOUND)
-        target_compile_options(${PROJECT_NAME} PRIVATE ${GL_CFLAGS})
-        target_link_options(${PROJECT_NAME} PRIVATE ${GL_LDFLAGS})
-        target_link_libraries(${PROJECT_NAME} PRIVATE ${GL_LIBRARIES})
-    endif()
-
-    if(GLU_FOUND)
-        target_compile_options(${PROJECT_NAME} PRIVATE ${GLU_CFLAGS})
-        target_link_options(${PROJECT_NAME} PRIVATE ${GLU_LDFLAGS})
-        target_link_libraries(${PROJECT_NAME} PRIVATE ${GLU_LIBRARIES})
-    endif()
-
-    # 標準数学ライブラリ
-    target_link_libraries(${PROJECT_NAME} PRIVATE m)
+    # freeglut (glut) と gl と数学ライブラリ m をリンクする
+    target_link_libraries(${PROJECT_NAME}
+        PRIVATE
+        OpenGL::GL
+        OpenGL::GLU
+        GLUT::GLUT
+        m
+    )
 
     # 起動時に読み込めるようにビルド後にテクスチャファイルを実行ファイルと同じ階層にコピーする
     foreach(TEX_FILE IN LISTS TEXTURE_FILES)

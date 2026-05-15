@@ -76,4 +76,6 @@ xcuserdata/
 *.bak
 *.tmp
 *.swp
+*.orig
+*.rej
 imgui.ini
