@@ -4,20 +4,21 @@ project(texture17 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# ソースファイルとヘッダファイル
+# ソースファイル
 set(SOURCES
     main.cpp
     box.cpp
     trackball.cpp
 )
 
+# ヘッダファイル
 set(HEADERS
     box.h
     trackball.h
 )
 
-# テクスチャファイルなど
-set(TEXTURE_FILES
+# リソースファイル
+set(RESOURCE_FILES
     "dot.raw"
     "room2nx.raw"
     "room2ny.raw"
@@ -33,7 +34,7 @@ if(APPLE)
     set(ICON_FILE "opengl.icns")
 
     # アプリケーションバンドルとして実行ファイルを作成する
-    add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${SOURCES} ${HEADERS} ${TEXTURE_FILES} ${ICON_FILE})
+    add_executable(${PROJECT_NAME} MACOSX_BUNDLE ${SOURCES} ${HEADERS} ${RESOURCE_FILES} ${ICON_FILE})
 
     # GLUT と OpenGL の Framework を検索してリンクする
     find_library(GLUT_LIBRARY GLUT)
@@ -60,10 +61,10 @@ if(APPLE)
     )
 
     # リソースの配置設定
-    set_source_files_properties(${TEXTURE_FILES} ${ICON_FILE} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+    set_source_files_properties(${RESOURCE_FILES} ${ICON_FILE} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 
-    # テクスチャファイルなどをアプリケーションバンドル内の Resources に組み込む
-    set_source_files_properties(${TEXTURE_FILES} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+    # リソースファイルなどをアプリケーションバンドル内の Resources に組み込む
+    set_source_files_properties(${RESOURCE_FILES} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
     set_source_files_properties(${ICON_FILE} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 
     # Xcode 上で Run したときに起動するようにアプリケーションバンドルをスタートアッププロジェクトにする
@@ -110,8 +111,8 @@ elseif(WIN32)
     target_link_libraries(${PROJECT_NAME} PRIVATE freeglut_static OpenGL::GL)
     target_compile_definitions(${PROJECT_NAME} PRIVATE FREEGLUT_STATIC)
 
-    # 起動時に読み込めるようにビルド後にテクスチャファイルを実行ファイルと同じ階層にコピーする
-    foreach(TEX_FILE IN LISTS TEXTURE_FILES)
+    # 起動時に読み込めるようにビルド後にリソースファイルを実行ファイルと同じ階層にコピーする
+    foreach(TEX_FILE IN LISTS RESOURCE_FILES)
         add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_if_different
             "${CMAKE_CURRENT_SOURCE_DIR}/${TEX_FILE}"
@@ -142,8 +143,8 @@ else()
         m
     )
 
-    # 起動時に読み込めるようにビルド後にテクスチャファイルを実行ファイルと同じ階層にコピーする
-    foreach(TEX_FILE IN LISTS TEXTURE_FILES)
+    # 起動時に読み込めるようにビルド後にリソースファイルを実行ファイルと同じ階層にコピーする
+    foreach(TEX_FILE IN LISTS RESOURCE_FILES)
         add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_if_different
             "${CMAKE_CURRENT_SOURCE_DIR}/${TEX_FILE}"

@@ -1,12 +1,13 @@
 ﻿/*
 ** 簡易トラックボール処理
 */
+#include "trackball.h"
+
+/* 標準ライブラリ */
 #if defined(_MSC_VER)
 #  define _USE_MATH_DEFINES
-#  define _CRT_SECURE_NO_WARNINGS
 #endif
 #include <math.h>
-#include "trackball.h"
 
 /* ドラッグ開始位置 */
 static int cx, cy;
