@@ -3,7 +3,7 @@
 #  include <GLUT/glut.h>
 #  include <OpenGL/glext.h>
 #else
-#  if defined(_WIN32)
+#  if defined(_MSC_VER)
 //#    pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"")
 #    define _USE_MATH_DEFINES
 #    define _CRT_SECURE_NO_WARNINGS
