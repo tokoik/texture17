@@ -64,10 +64,10 @@ static void init()
 
   /* テクスチャの読み込みに使う配列 */
   GLubyte texture[TEXHEIGHT * TEXWIDTH * 4];
-  FILE *fp;
 
   /* テクスチャ画像の読み込み */
-  if ((fp = fopen(texture_file, "rb")) != NULL) {
+  FILE* fp = fopen(texture_file, "rb");
+  if (fp != NULL) {
     fread(texture, sizeof texture, 1, fp);
     fclose(fp);
   }
@@ -171,7 +171,8 @@ static void init()
       GL_TEXTURE_CUBE_MAP_POSITIVE_Y,
     };
 
-    if ((fp = fopen(textures[i], "rb")) != NULL) {
+    FILE* fp = fopen(textures[i], "rb");
+    if (fp != NULL) {
       /* テクスチャ画像の読み込み */
       fread(texture, 128 * 128 * 4, 1, fp);
       fclose(fp);
