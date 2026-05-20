@@ -1,21 +1,18 @@
 ﻿/*
 ** 簡易トラックボール処理
 */
+#if defined(_MSC_VER)
+#  define _USE_MATH_DEFINES
+#  define _CRT_SECURE_NO_WARNINGS
+#endif
 #include <math.h>
 #include "trackball.h"
-
-#ifndef M_PI
-#  define M_PI 3.14159265358979323846
-#endif
 
 /* ドラッグ開始位置 */
 static int cx, cy;
 
 /* マウスの絶対位置→ウィンドウ内での相対位置の換算係数 */
 static double sx, sy;
-
-/* マウスの相対位置→回転角の換算係数 */
-#define SCALE (2.0 * M_PI)
 
 /* 回転の初期値 (クォータニオン) */
 static double cq[4] = { 1.0, 0.0, 0.0, 0.0 };
@@ -48,7 +45,7 @@ static void qmul(double r[], const double p[], const double q[])
 /*
 ** 回転変換行列 r <- クォータニオン q
 */
-static void qrot(double r[], double q[])
+static void qrot(double r[], const double q[])
 {
   double x2 = q[1] * q[1] * 2.0;
   double y2 = q[2] * q[2] * 2.0;
@@ -59,7 +56,7 @@ static void qrot(double r[], double q[])
   double xw = q[1] * q[0] * 2.0;
   double yw = q[2] * q[0] * 2.0;
   double zw = q[3] * q[0] * 2.0;
-  
+
   r[ 0] = 1.0 - y2 - z2;
   r[ 1] = xy + zw;
   r[ 2] = zx - yw;
@@ -71,6 +68,21 @@ static void qrot(double r[], double q[])
   r[10] = 1.0 - x2 - y2;
   r[ 3] = r[ 7] = r[11] = r[12] = r[13] = r[14] = 0.0;
   r[15] = 1.0;
+}
+
+/*
+** クォータニオン q の正規化
+*/
+static void qnormalize(double q[])
+{
+  double l = q[0] * q[0] + q[1] * q[1] + q[2] * q[2] + q[3] * q[3];
+
+  if (l > 0) {
+    q[0] /= l;
+    q[1] /= l;
+    q[2] /= l;
+    q[3] /= l;
+  }
 }
 
 /*
@@ -87,7 +99,7 @@ void trackballInit()
   cq[1] = 0.0;
   cq[2] = 0.0;
   cq[3] = 0.0;
-  
+
   /* 回転行列の初期化 */
   qrot(rt, cq);
 }
@@ -125,22 +137,25 @@ void trackballMotion(int x, int y)
 {
   if (drag) {
     double dx, dy, a;
-    
+
     /* マウスポインタの位置のドラッグ開始位置からの変位 */
     dx = (x - cx) * sx;
     dy = (y - cy) * sy;
-    
+
     /* マウスポインタの位置のドラッグ開始位置からの距離 */
     a = sqrt(dx * dx + dy * dy);
-    
+
     if (a != 0.0) {
-      double ar = a * SCALE * 0.5;
+      double ar = a * M_PI;
       double as = sin(ar) / a;
       double dq[4] = { cos(ar), dy * as, dx * as, 0.0 };
-      
+
       /* クォータニオンを掛けて回転を合成 */
       qmul(tq, dq, cq);
-      
+
+      /* クォータニオンを正規化 */
+      qnormalize(tq);
+
       /* クォータニオンから回転の変換行列を求める */
       qrot(rt, tq);
     }
