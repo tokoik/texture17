@@ -143,4 +143,4 @@
 
    描画が完了したら、他の描画に影響を与えないよう `glDisable()` を使って、各テクスチャ機能や自動生成を無効化し、アクティブなテクスチャユニットを0に戻します。
 
-![フレネル反射](https://tokoik.github.io/blog/assets/images/texture17.webp)
+![フレネル反射](https://tokoik.github.io/blog/assets/images/texture/texture17.webp)
