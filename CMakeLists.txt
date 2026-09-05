@@ -58,6 +58,7 @@ if(APPLE)
         # Xcode のスキームを生成する
         XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER "com.yourcompany.${PROJECT_NAME}"
         XCODE_GENERATE_SCHEME ON
+        XCODE_SCHEME_WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
     )
 
     # リソースの配置設定
